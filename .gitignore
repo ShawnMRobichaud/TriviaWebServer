@@ -1,0 +1,13 @@
+# Ignore executables
+*.exe
+*.out
+*.app
+*.o
+*.obj
+
+# Ignore binary files without extension (common in Linux/Unix)
+*
+!*.*
+!*/
+
+*.json

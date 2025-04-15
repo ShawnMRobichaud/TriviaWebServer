@@ -75,7 +75,7 @@ public:
 };
 
 //main func to test class
-int main() {
+/*int main() {
 
     srand(static_cast<unsigned int>(time(0)));
 
@@ -92,3 +92,4 @@ int main() {
 
     return 0;
 }
+*/
