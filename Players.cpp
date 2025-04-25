@@ -1,10 +1,10 @@
 //players class
 #include <iostream>
 #include <string>
-#include <cstdint> //used for uint8_t
+#include <cstdint> //used for uint
 #include <array> 
 #include <cstdlib>
-#include <ctime>
+#include <random> //for random number generation
 
 
 using namespace std;
@@ -12,14 +12,17 @@ using namespace std;
 class Players {
 private:
     string name; //store player name
-    array<uint8_t, 6> mac_address; //store a 6 byte mac
     string team; //store team name
-    int score; //track score
-    int ID; //unique player ID
+    uint16_t score; //track score
+    uint16_t ID; //unique player ID
+
+    // static engine & distribution for random number generation
+    static mt19937 rng;
+    static uniform_int_distribution<uint16_t> dist;
 
 public:
     //constructor with default values
-    Players() : name(""), mac_address{0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, team(""), score(0), ID(0) {}
+    Players() : name(""), team(""), score(0), ID(0) {}
 
     //set function for name
     void setName( string playerName) {
@@ -41,48 +44,39 @@ public:
         return name;
     };
 
-    //get function to return mac address
-    array<uint8_t, 6> getMac() const {
-        //esp_read_mac()?
-        //might need seperate setmac func
-        return mac_address;
-    };
-    
     //get function to return team name
     string getTeam() const {
         return team;
     };
 
     //get function to return overall score
-    int getScore() const {
+    uint16_t getScore() const {
         return score;
     };
 
     //get function for ID
-    int getID() const {
+    uint16_t getID() const {
         return ID;
     };
 
-    //function to generate a player ID
-    //not too random, but should mac xor should help
     void generateID() {
-        ID = (rand() % 90000) + 10000;
-        //hash the id with the mac address
-        for (int i = 0; i < mac_address.size(); ++i) {
-            ID ^= mac_address[i]; // XOR each byte
-        }
-    };
+        //random 3 digit ID
+        ID = dist(rng);
+    }
 };
 
-//main func to test class
-/*int main() {
+    // static member definitions
+    mt19937 Players::rng{ random_device{}() };
+    uniform_int_distribution<uint16_t> Players::dist{ 100, 999 };
 
-    srand(static_cast<unsigned int>(time(0)));
+//main func to test class
+/*
+int main() {
 
     Players player1;
     player1.setName("bigatake");
     player1.setTeam("Team 1");
-    player1.setScore(100);
+    player1.setScore(6);
     player1.generateID();
 
     cout << "Player Name: " << player1.getName() << endl;
@@ -92,4 +86,4 @@ public:
 
     return 0;
 }
-*/
+    */
